@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import { madlib } from "./madLibsText/madlibs";
+import styled from "@emotion/styled";
 
 const { blanks, value, title } = madlib;
 const solution = [];
@@ -8,7 +9,7 @@ const solution = [];
 function App() {
     const [words] = React.useState([]);
     const [input, setInput] = React.useState("");
-    let [count, setCount] = React.useState(13);
+    let [count, setCount] = React.useState(0);
     // const [message, setMessage] = React.useState("");
     const [complete, setComplete] = React.useState(false);
 
@@ -27,7 +28,6 @@ function App() {
 
     const incrementBlanks = (blanks, words, value) => {
         let max = blanks.length;
-
         if (count < max) {
             count++;
             setCount(count);
@@ -35,7 +35,6 @@ function App() {
             setComplete(true);
             combineBlanksAndValues(value, words);
         }
-        console.log(solution);
     };
 
     const combineBlanksAndValues = (value, words) => {
@@ -45,14 +44,13 @@ function App() {
                 solution.push(words[i]);
             }
         }
-        return solution;
     };
 
     return (
-        <div>
-            <h1>{title}</h1>
-            <form onSubmit={e => addWords(e, input, blanks)}>
-                <label htmlFor="">{blanks[count]}</label>
+        <AppContainer>
+            <TitleTop>{title}</TitleTop>
+            <Form onSubmit={e => addWords(e, input, blanks)}>
+                <label htmlFor="">{madlib.blanks[count]}</label>
                 <input
                     type="text"
                     placeholder="Add a word"
@@ -62,14 +60,30 @@ function App() {
                 />
                 <button>add</button>
                 {complete === true
-                    ? (console.log("Solution in return", solution),
-                      solution.map(solution => {
-                          return <p>{solution}</p>;
-                      }))
+                    ? solution.map((solution, index) => {
+                          return <p key={index}>{solution}</p>;
+                      })
                     : null}
-            </form>
-        </div>
+            </Form>
+        </AppContainer>
     );
 }
 
 export default App;
+
+const AppContainer = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 800px;
+`;
+
+const TitleTop = styled.h1`
+    color: teal;
+`;
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+`;
