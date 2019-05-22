@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 
 const { blanks, value, title } = madlib;
 const solution = [];
+// render converts the solution array to a string so I can display it as a paragraph
+const render = solution.join("");
 
 function App() {
     const [words] = React.useState([]);
@@ -17,6 +19,7 @@ function App() {
         setInput(e.target.value);
     };
 
+    //Takes user input and adds words to the words array
     const addWords = (e, word, blanks) => {
         e.preventDefault();
         if (word.length > 0) {
@@ -26,6 +29,7 @@ function App() {
         setInput("");
     };
 
+    //incremetns the count so the right
     const incrementBlanks = (blanks, words, value) => {
         let max = blanks.length;
         if (count < max) {
@@ -37,6 +41,7 @@ function App() {
         }
     };
 
+    //combines both the words array and the values array into a single array
     const combineBlanksAndValues = (value, words) => {
         for (let i = 0; i < value.length; i++) {
             solution.push(value[i]);
@@ -50,6 +55,7 @@ function App() {
         <AppContainer>
             <TitleTop>{title}</TitleTop>
             <Form onSubmit={e => addWords(e, input, blanks)}>
+                {/* count shows the right label for the blanks            */}
                 <label htmlFor="">{madlib.blanks[count]}</label>
                 <input
                     type="text"
@@ -59,17 +65,15 @@ function App() {
                     value={input}
                 />
                 <button>add</button>
-                {complete === true
-                    ? solution.map((solution, index) => {
-                          return <p key={index}>{solution}</p>;
-                      })
-                    : null}
+                {complete === true ? <p>{render}</p> : null}
             </Form>
         </AppContainer>
     );
 }
 
 export default App;
+
+// 💥💥💥💥💥💥💥💥Styled with emotion💥💥💥💥💥💥💥💥💥💥
 
 const AppContainer = styled.div`
     display: flex;
