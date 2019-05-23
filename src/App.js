@@ -4,16 +4,15 @@ import { madlib } from "./madLibsText/madlibs";
 import styled from "@emotion/styled";
 
 const { blanks, value, title } = madlib;
-const solution = [];
-// render converts the solution array to a string so I can display it as a paragraph
-const render = solution.join("");
 
 function App() {
-    const [words] = React.useState([]);
+    const [solution, setSolution] = React.useState([]);
+    const [words, setWords] = React.useState([]);
     const [input, setInput] = React.useState("");
     let [count, setCount] = React.useState(0);
-    // const [message, setMessage] = React.useState("");
     const [complete, setComplete] = React.useState(false);
+    const [showLib, setShowLib] = React.useState(false);
+    const [showInput, setShowInput] = React.useState(true);
 
     const changeHandler = e => {
         setInput(e.target.value);
@@ -32,7 +31,7 @@ function App() {
     //incremetns the count so the right
     const incrementBlanks = (blanks, words, value) => {
         let max = blanks.length;
-        if (count < max) {
+        if (count < max - 1) {
             count++;
             setCount(count);
         } else {
@@ -40,6 +39,9 @@ function App() {
             combineBlanksAndValues(value, words);
         }
     };
+
+    // render converts the solution array to a string so I can display it as a paragraph
+    const render = solution.join("");
 
     //combines both the words array and the values array into a single array
     const combineBlanksAndValues = (value, words) => {
@@ -51,29 +53,64 @@ function App() {
         }
     };
 
+    const showMeLib = () => {
+        setShowInput(false);
+        setComplete(true);
+        setShowLib(true);
+
+        console.log("showlib", showLib);
+    };
+
+    const reset = () => {
+        setShowInput(true);
+        setComplete(false);
+        setShowLib(false);
+        setCount(0);
+        setWords([]);
+        setSolution([]);
+    };
+
     return (
         <AppContainer>
-            <TitleTop>{title}</TitleTop>
-            <Form onSubmit={e => addWords(e, input, blanks)}>
-                {/* count shows the right label for the blanks            */}
-                <label htmlFor="">{madlib.blanks[count]}</label>
-                <input
-                    type="text"
-                    placeholder="Add a word"
-                    name="input"
-                    onChange={changeHandler}
-                    value={input}
-                />
-                <button>add</button>
-                {complete === true ? <p>{render}</p> : null}
-            </Form>
+            {complete === true && showLib === false ? (
+                <>
+                    <TitleTop>{title}</TitleTop>
+                    <h3>All Done</h3>
+                    <button onClick={() => showMeLib()}>Show me the Mad Lib!</button>
+                </>
+            ) : null}
+            {showInput === true && complete === false ? (
+                <>
+                    <TitleTop>{title}</TitleTop>
+                    <Form onSubmit={e => addWords(e, input, blanks)}>
+                        <label htmlFor="">{blanks[count]}</label>
+                        <input
+                            type="text"
+                            placeholder="Add a word"
+                            name="input"
+                            onChange={changeHandler}
+                            value={input}
+                        />
+
+                        <button>add</button>
+                    </Form>
+                </>
+            ) : null}
+
+            {showLib === true ? (
+                <>
+                    <TitleTop>{title}</TitleTop>
+                    <p>{render}</p>
+                    <button onClick={() => reset()}>Reset</button>
+                </>
+            ) : null}
         </AppContainer>
     );
 }
 
 export default App;
 
-// 💥💥💥💥💥💥💥💥Styled with emotion💥💥💥💥💥💥💥💥💥💥
+// Styled with emotion
 
 const AppContainer = styled.div`
     display: flex;
