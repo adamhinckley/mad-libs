@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { madlib } from "./madLibsText/madlibs";
 import styled from "@emotion/styled";
+import AddMadlibForm from "./components/addMadlibForm";
 
 const { blanks, value, title } = madlib;
 
@@ -70,8 +71,11 @@ function App() {
         setSolution([]);
     };
 
+    console.log();
+
     return (
         <AppContainer>
+            <AddMadlibForm />
             {complete === true && showLib === false ? (
                 <>
                     <TitleTop>{title}</TitleTop>
@@ -91,7 +95,6 @@ function App() {
                             onChange={changeHandler}
                             value={input}
                         />
-
                         <button>add</button>
                     </Form>
                 </>
@@ -118,6 +121,7 @@ const AppContainer = styled.div`
     flex-direction: column;
     margin: 0 auto;
     width: 800px;
+    border: 1px solid red;
 `;
 
 const TitleTop = styled.h1`
